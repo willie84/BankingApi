@@ -7,7 +7,7 @@ public class AccountCreationDetails {
     @NotBlank(message = "Bank name is mandatory")
     private String bankName;
 
-    @NotBlank(message = "customerId is mandatory")
+    @NotBlank(message = "idNumber is mandatory")
     private String IdNumber;
 
     @NotBlank(message = "accountType is mandatory")
