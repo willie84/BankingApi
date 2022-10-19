@@ -30,6 +30,7 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @Validated
@@ -63,6 +64,7 @@ public class AccountRestController {
 
             // Return the account details, or warn that no account was found for given input
             if (account == null) {
+                LOGGER.error(constants.NO_ACCOUNT_FOUND);
                 return new ResponseEntity<>(constants.NO_ACCOUNT_FOUND, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(account, HttpStatus.OK);
@@ -79,29 +81,35 @@ public class AccountRestController {
         // Validate input
         if (InputValidator.isCreateAccountCriteriaValid(accountCreationDetails)) {
             // Attempt to retrieve the account information
-            Customer customer = customerService.getCustomer(accountCreationDetails.getIdNumber());
+            Optional<Customer> customer = customerService.getCustomer(accountCreationDetails.getIdNumber());
 
-            if (customer == null) {
+            if (customer.isEmpty()) {
+                LOGGER.error(constants.NO_ACCOUNT_FOUND);
                 return new ResponseEntity<>(constants.NO_ACCOUNT_FOUND, HttpStatus.OK);
             } else {
-                List<Account> accountList = accountService.getAccount(customer,accountCreationDetails.getBankName());
+                List<Account> accountList = accountService.getAccount(customer.get(),accountCreationDetails.getBankName());
                 if (!findIfAccountOfSameTypeExists(accountList, accountCreationDetails.getAccountType())) {
-                    Account account = accountService.createAccount(accountCreationDetails.getBankName(), customer,accountCreationDetails.getAccountType());
+                    Account account = accountService.createAccount(accountCreationDetails.getBankName(), customer.get(),accountCreationDetails.getAccountType());
                     // Return the account details, or warn that no account was found for given input
                     if (account == null) {
+                        LOGGER.error(constants.CREATE_ACCOUNT_FAILED);
                         return new ResponseEntity<>(constants.CREATE_ACCOUNT_FAILED, HttpStatus.OK);
                     } else {
+                        LOGGER.trace(account+" Account was created successfully");
                         return new ResponseEntity<>(account, HttpStatus.OK);
                     }
                 }
                 else{
-                    return new ResponseEntity<>(constants.DUPLICATE_ACCOUNT_TYPE, HttpStatus.OK);
+                    LOGGER.error(constants.DUPLICATE_ACCOUNT_TYPE);
+                    return new ResponseEntity<>(constants.DUPLICATE_ACCOUNT_TYPE, HttpStatus.BAD_REQUEST);
                 }
             }
         } else {
             if(!ACCOUNT_TYPE.contains(accountCreationDetails.getAccountType())){
+                LOGGER.error(constants.INVALID_ACCOUNT_TYPE);
                 return new ResponseEntity<>(constants.INVALID_ACCOUNT_TYPE, HttpStatus.BAD_REQUEST);
             }
+            LOGGER.error(constants.INVALID_SEARCH_CRITERIA);
             return new ResponseEntity<>(constants.INVALID_SEARCH_CRITERIA, HttpStatus.BAD_REQUEST);
         }
 

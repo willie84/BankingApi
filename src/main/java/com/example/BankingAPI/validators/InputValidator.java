@@ -6,6 +6,7 @@ import com.example.BankingAPI.utils.AccountCreationDetails;
 import com.example.BankingAPI.utils.CustomerCreationDetails;
 import com.example.BankingAPI.utils.GetAccountDetails;
 import com.example.BankingAPI.utils.GetCustomerDetails;
+import com.example.BankingAPI.utils.QueryTransactionsListInput;
 import com.example.BankingAPI.utils.TransactionDetails;
 
 public class InputValidator {
@@ -17,6 +18,10 @@ public class InputValidator {
     public static boolean isCustomerSearchCriteriaValid(GetCustomerDetails getCustomerDetails) {
         return !getCustomerDetails.getidNumber().isBlank()
                 && getCustomerDetails.getidNumber().length() == constants.ID_LENGTH;
+    }
+
+    public static boolean isCustomerIDRightlength(String customerID) {
+        return customerID.length() == constants.ID_LENGTH;
     }
 
     public static boolean isAccountNoValid(String accountNo) {
@@ -38,7 +43,7 @@ public class InputValidator {
     public static boolean isCreateCustomerCriteriaValid(CustomerCreationDetails customerCreationDetails) {
         return (!customerCreationDetails.getName().isBlank()
                 && !customerCreationDetails.getAddress().isBlank()
-                && !customerCreationDetails.getIdNumber().isBlank());
+                && !customerCreationDetails.getIdNumber().isBlank() && isCustomerIDRightlength(customerCreationDetails.getIdNumber()));
     }
 
     public static boolean isSearchTransactionValid(TransactionDetails transactionDetails) {
@@ -53,5 +58,9 @@ public class InputValidator {
 
         return true;
 
+    }
+
+    public static boolean isSearchTransactionQueryListValid(QueryTransactionsListInput queryTransactionsListInput) {
+        return (!queryTransactionsListInput.getAccountNumber().isBlank());
     }
 }

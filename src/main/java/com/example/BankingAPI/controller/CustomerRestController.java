@@ -2,6 +2,7 @@ package com.example.BankingAPI.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -50,10 +51,10 @@ public class CustomerRestController {
       // Validate input
       if (InputValidator.isCustomerSearchCriteriaValid(getCustomerDetails)) {
          // Attempt to retrieve the account information
-         Customer customer = customerService.getCustomer(getCustomerDetails.getidNumber());
+         Optional<Customer> customer = customerService.getCustomer(getCustomerDetails.getidNumber());
 
          // Return the account details, or warn that no account was found for given input
-         if (customer == null) {
+         if (customer.isEmpty()) {
             return new ResponseEntity<>(constants.NO_ACCOUNT_FOUND, HttpStatus.OK);
          } else {
             return new ResponseEntity<>(customer, HttpStatus.OK);
@@ -69,20 +70,33 @@ public class CustomerRestController {
 
       // Validate input
       if (InputValidator.isCreateCustomerCriteriaValid(customerCreationDetails)) {
-         // Attempt to retrieve the account information
+         // Attempt to retrieve the customer information
+         Optional<Customer> customerz = customerService.getCustomer(customerCreationDetails.getIdNumber());
+
+         if(customerz.isEmpty()){
          Customer customer =
                customerService.createCustomer(
                      customerCreationDetails.getName(),
                      customerCreationDetails.getIdNumber(),
                      customerCreationDetails.getAddress());
-
          // Return the account details, or warn that no account was found for given input
          if (customer == null) {
             return new ResponseEntity<>(constants.CREATE_CUSTOMER_FAILED, HttpStatus.OK);
          } else {
             return new ResponseEntity<>(customer, HttpStatus.OK);
          }
-      } else {
+      }
+         else{
+            return new ResponseEntity<>(constants.CUSTOMER_ALREADY_EXISTS_WITH_SAME_ID_NUMBER, HttpStatus.OK);
+         }
+
+      }
+
+      if(!customerCreationDetails.getIdNumber().isBlank() && !InputValidator.isCustomerIDRightlength(customerCreationDetails.getIdNumber())){
+         return new ResponseEntity<>(constants.INVALID_ID_LENGTH, HttpStatus.BAD_REQUEST);
+      }
+
+      else {
          return new ResponseEntity<>(constants.INVALID_SEARCH_CRITERIA, HttpStatus.BAD_REQUEST);
       }
    }

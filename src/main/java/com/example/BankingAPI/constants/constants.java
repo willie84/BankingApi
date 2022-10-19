@@ -14,10 +14,7 @@ public class constants {
     public static final String INSUFFICIENT_ACCOUNT_BALANCE =
             "Your account does not have sufficient balance";
 
-    public static final String SORT_CODE_PATTERN_STRING = "[0-9]{2}-[0-9]{2}-[0-9]{2}";
-
     public static final String ACCOUNT_NUMBER_PATTERN_STRING = "[0-9]{13}";
-    public static final Pattern SORT_CODE_PATTERN = Pattern.compile("^[0-9]{2}-[0-9]{2}-[0-9]{2}$");
     public static final Pattern ACCOUNT_NUMBER_PATTERN = Pattern.compile("^[0-9]{13}$");
     public static final int ID_LENGTH = 13;
 
@@ -38,4 +35,6 @@ public class constants {
 
     public static final String CREATE_CUSTOMER_FAILED =
             "Error happened during creating new customer";
+    public static final Object INVALID_ID_LENGTH = "The ID Length should be 13 in length";
+    public static final Object CUSTOMER_ALREADY_EXISTS_WITH_SAME_ID_NUMBER = "Customer with same ID Number already exists" ;
 }

@@ -8,11 +8,16 @@ import com.example.BankingAPI.model.Transaction;
 import com.example.BankingAPI.repository.AccountRepository;
 import com.example.BankingAPI.repository.TransactionRepository;
 import com.example.BankingAPI.utils.TransactionDetails;
+import com.example.BankingAPI.utils.createTransaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+
+
+import static com.example.BankingAPI.utils.createTransaction.createTransferTransaction;
 
 @Service
 public class TransactionService {
@@ -35,22 +40,26 @@ public class TransactionService {
 
         if (sourceAccount.isPresent() && targetAccount.isPresent()) {
             if (isAmountAvailable(transactionDetails.getAmount(), sourceAccount.get().getCurrentBalance().getAmount())) {
-                var transaction = new Transaction();
-
-                transaction.setAmount(new LedgerAmount("ZAR",transactionDetails.getAmount()));
-                transaction.setSourceAccountId(sourceAccount.get().getAccountId());
-                transaction.setTargetAccountId(targetAccount.get().getAccountId());
-                transaction.setTargetOwnerName(targetAccount.get().getCustomer());
-                transaction.setInitiationDate(LocalDateTime.now());
-                transaction.setCompletionDate(LocalDateTime.now());
+                //transactionRepository.insert(transaction);
+                LedgerAmount ledgerAmount = new LedgerAmount("ZAR",transactionDetails.getAmount());
+                createTransferTransaction(sourceAccount.get(),targetAccount.get(),ledgerAmount,transactionRepository, ACTION.WITHDRAW.toString());
+                createTransferTransaction(targetAccount.get(),sourceAccount.get(),ledgerAmount,transactionRepository, ACTION.DEPOSIT.toString());
                 updateAccountBalance(sourceAccount.get(), transactionDetails.getAmount(), ACTION.WITHDRAW);
                 updateAccountBalance(targetAccount.get(), transactionDetails.getAmount(), ACTION.DEPOSIT);
-                transactionRepository.insert(transaction);
                 return true;
             }
         }
         return false;
     }
+
+    public AccountRepository getAccountRepository() {
+        return accountRepository;
+    }
+
+    public TransactionRepository getTransactionRepository() {
+        return transactionRepository;
+    }
+
 
     public void updateAccountBalance(Account account, double amount, ACTION action) {
         if (action == ACTION.WITHDRAW) {
@@ -59,6 +68,10 @@ public class TransactionService {
             account.setCurrentBalance(new LedgerAmount("ZAR",account.getCurrentBalance().getAmount() + amount));
         }
         accountRepository.save(account);
+    }
+
+    public Optional<List<Transaction>> transactionsFortheAccount(String accountNumber) {
+        return transactionRepository.findAllBySourceAccountIdOrTargetAccountId(accountNumber,accountNumber);
     }
 
     // TODO support OFFERING OVERDRAFTS

@@ -2,9 +2,12 @@ package com.example.BankingAPI.controller;
 
 import com.example.BankingAPI.constants.ACTION;
 import com.example.BankingAPI.model.Account;
+import com.example.BankingAPI.model.LedgerAmount;
+import com.example.BankingAPI.model.Transaction;
 import com.example.BankingAPI.service.AccountService;
 import com.example.BankingAPI.service.TransactionService;
 import com.example.BankingAPI.utils.DepositDetails;
+import com.example.BankingAPI.utils.QueryTransactionsListInput;
 import com.example.BankingAPI.utils.TransactionDetails;
 import com.example.BankingAPI.utils.WithdrawDetails;
 import com.example.BankingAPI.validators.InputValidator;
@@ -17,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,13 +29,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.example.BankingAPI.constants.constants.INSUFFICIENT_ACCOUNT_BALANCE;
 import static com.example.BankingAPI.constants.constants.INVALID_SEARCH_CRITERIA;
 import static com.example.BankingAPI.constants.constants.INVALID_TRANSACTION;
 import static com.example.BankingAPI.constants.constants.NO_ACCOUNT_FOUND;
 import static com.example.BankingAPI.constants.constants.SUCCESS;
+import static com.example.BankingAPI.utils.createTransaction.createSingleTransaction;
 
 @RestController
 @RequestMapping("api/v1")
@@ -46,6 +53,20 @@ public class TransactionRestController {
     public TransactionRestController(AccountService accountService, TransactionService transactionService) {
         this.accountService = accountService;
         this.transactionService = transactionService;
+    }
+
+    @GetMapping(value = "/transactions",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> queryTransactions(
+            @Valid @RequestBody QueryTransactionsListInput queryTransactionsListInput) {
+        if (InputValidator.isSearchTransactionQueryListValid(queryTransactionsListInput)) {
+            Optional<List<Transaction>> transactionsList = transactionService.transactionsFortheAccount(queryTransactionsListInput.getAccountNumber());
+            LOGGER.info("The transactions of this account have been retrieved");
+            return new ResponseEntity<>(transactionsList, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(INVALID_TRANSACTION, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping(value = "/transfer",
@@ -82,6 +103,8 @@ public class TransactionRestController {
             } else {
                 if (transactionService.isAmountAvailable(withdrawDetails.getAmount(), account.getCurrentBalance().getAmount())) {
                     transactionService.updateAccountBalance(account, withdrawDetails.getAmount(), ACTION.WITHDRAW);
+                    LedgerAmount amount = new LedgerAmount("ZAR", withdrawDetails.getAmount());
+                    createSingleTransaction(account,amount,transactionService.getTransactionRepository(),ACTION.WITHDRAW.toString());
                     return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
                 }
                 return new ResponseEntity<>(INSUFFICIENT_ACCOUNT_BALANCE, HttpStatus.OK);
@@ -109,6 +132,8 @@ public class TransactionRestController {
                 return new ResponseEntity<>(NO_ACCOUNT_FOUND, HttpStatus.OK);
             } else {
                 transactionService.updateAccountBalance(account, depositDetails.getAmount(), ACTION.DEPOSIT);
+                LedgerAmount amount = new LedgerAmount("ZAR", depositDetails.getAmount());
+                createSingleTransaction(account,amount,transactionService.getTransactionRepository(),ACTION.DEPOSIT.toString());
                 return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
             }
         } else {

@@ -15,11 +15,11 @@ public class CustomerService {
         this.customerRepository=customerRepository;
     }
 
-    public Customer getCustomer(String IdNumber) {
+    public Optional<Customer>  getCustomer(String IdNumber) {
         Optional<Customer> customer = customerRepository
                 .findByidNumber(IdNumber);
         System.out.println(customer);
-        return customer.orElse(null);
+        return customer;
     }
 
     public Customer createCustomer(String name, String IdNumber,String address) {
