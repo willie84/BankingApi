@@ -1,122 +1,116 @@
 package com.example.BankingAPI.model;
 
-import java.time.LocalDateTime;
-import java.util.Objects;
-
+import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import lombok.Data;
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Data
 @Document
 public class Transaction {
-   @Id
-   private String transactionId;
-   private String sourceAccountId;
+    @Id
+    private String transactionId;
+    private String sourceAccountId;
 
-   private String targetAccountId;
+    private String targetAccountId;
 
-   private Customer targetOwnerName;
+    private Customer targetOwnerName;
 
-   private LedgerAmount transactionAmount;
+    private LedgerAmount transactionAmount;
 
-   private LocalDateTime initiationDate;
+    private LocalDateTime initiationDate;
 
-   private LocalDateTime completionDate;
+    private LocalDateTime completionDate;
+    private String reference;
 
-   public Transaction() {
-   }
+    public String getReference() {
+        return reference;
+    }
 
-   public String getTransactionID() {
-      return transactionId;
-   }
+    public void setReference(String reference) {
+        this.reference = reference;
+    }
 
-   public void setTransactionID(String transactionID) {
-      this.transactionId = transactionID;
-   }
+    public Transaction() {
+    }
 
-   public String getSourceAccountId() {
-      return sourceAccountId;
-   }
+    public String getTransactionID() {
+        return transactionId;
+    }
 
-   public void setSourceAccountId(String sourceAccountId) {
-      this.sourceAccountId = sourceAccountId;
-   }
+    public void setTransactionID(String transactionID) {
+        this.transactionId = transactionID;
+    }
 
-   public String getTargetAccountId() {
-      return targetAccountId;
-   }
+    public String getSourceAccountId() {
+        return sourceAccountId;
+    }
 
-   public void setTargetAccountId(String targetAccountId) {
-      this.targetAccountId = targetAccountId;
-   }
+    public void setSourceAccountId(String sourceAccountId) {
+        this.sourceAccountId = sourceAccountId;
+    }
 
-   public Customer getTargetOwnerName() {
-      return targetOwnerName;
-   }
+    public String getTargetAccountId() {
+        return targetAccountId;
+    }
 
-   public void setTargetOwnerName(Customer targetOwnerName) {
-      this.targetOwnerName = targetOwnerName;
-   }
+    public void setTargetAccountId(String targetAccountId) {
+        this.targetAccountId = targetAccountId;
+    }
 
-   public LedgerAmount getTransactionAmount() {
-      return transactionAmount;
-   }
+    public Customer getTargetOwnerName() {
+        return targetOwnerName;
+    }
 
-   public void setTransactionAmount(LedgerAmount transactionAmount) {
-      this.transactionAmount = transactionAmount;
-   }
+    public void setTargetOwnerName(Customer targetOwnerName) {
+        this.targetOwnerName = targetOwnerName;
+    }
 
-   public LocalDateTime getInitiationDate() {
-      return initiationDate;
-   }
+    public LedgerAmount getTransactionAmount() {
+        return transactionAmount;
+    }
 
-   public void setInitiationDate(LocalDateTime initiationDate) {
-      this.initiationDate = initiationDate;
-   }
+    public void setTransactionAmount(LedgerAmount transactionAmount) {
+        this.transactionAmount = transactionAmount;
+    }
 
-   public LocalDateTime getCompletionDate() {
-      return completionDate;
-   }
+    public LocalDateTime getInitiationDate() {
+        return initiationDate;
+    }
 
-   public void setCompletionDate(LocalDateTime completionDate) {
-      this.completionDate = completionDate;
-   }
+    public void setInitiationDate(LocalDateTime initiationDate) {
+        this.initiationDate = initiationDate;
+    }
 
-   @Override
-   public boolean equals(Object o) {
-      if (this == o)
-         return true;
-      if (!(o instanceof Transaction))
-         return false;
-      Transaction that = (Transaction) o;
-      return Objects.equals(getTransactionID(), that.getTransactionID())
-            && Objects.equals(getSourceAccountId(), that.getSourceAccountId())
-            && Objects.equals(getTargetAccountId(), that.getTargetAccountId())
-            && Objects.equals(getTargetOwnerName(), that.getTargetOwnerName())
-            && Objects.equals(getTransactionAmount(), that.getTransactionAmount())
-            && Objects.equals(getInitiationDate(), that.getInitiationDate())
-            && Objects.equals(getCompletionDate(), that.getCompletionDate());
-   }
+    public LocalDateTime getCompletionDate() {
+        return completionDate;
+    }
 
-   @Override
-   public int hashCode() {
-      return Objects.hash(
-            getTransactionID(),
-            getSourceAccountId(),
-            getTargetAccountId(),
-            getTargetOwnerName(),
-            getTransactionAmount(),
-            getInitiationDate(),
-            getCompletionDate());
-   }
+    public void setCompletionDate(LocalDateTime completionDate) {
+        this.completionDate = completionDate;
+    }
 
-   @Override
-   public String toString() {
-      return "Transaction{" + "transactionID='" + transactionId + '\'' + ", sourceAccountId='" + sourceAccountId + '\''
-            + ", targetAccountId='" + targetAccountId + '\'' + ", targetOwnerName=" + targetOwnerName
-            + ", transactionAmount=" + transactionAmount + ", initiationDate=" + initiationDate + ", completionDate="
-            + completionDate + '}';
-   }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Transaction)) return false;
+        Transaction that = (Transaction) o;
+        return Objects.equals(transactionId, that.transactionId) && Objects.equals(getSourceAccountId(), that.getSourceAccountId()) && Objects.equals(getTargetAccountId(), that.getTargetAccountId()) && Objects.equals(getTargetOwnerName(), that.getTargetOwnerName()) && Objects.equals(getTransactionAmount(), that.getTransactionAmount()) && Objects.equals(getInitiationDate(), that.getInitiationDate()) && Objects.equals(getCompletionDate(), that.getCompletionDate()) && Objects.equals(getReference(), that.getReference());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(transactionId, getSourceAccountId(), getTargetAccountId(), getTargetOwnerName(), getTransactionAmount(), getInitiationDate(), getCompletionDate(), getReference());
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" + "transactionId='" + transactionId + '\'' + ", sourceAccountId='" + sourceAccountId + '\'' + ", targetAccountId='" + targetAccountId + '\'' + ", targetOwnerName=" + targetOwnerName + ", transactionAmount=" + transactionAmount + ", initiationDate=" + initiationDate + ", completionDate=" + completionDate + ", reference='" + reference + '\'' + '}';
+    }
+
+    public void setAmount(LedgerAmount zar) {
+        transactionAmount = zar;
+    }
 }

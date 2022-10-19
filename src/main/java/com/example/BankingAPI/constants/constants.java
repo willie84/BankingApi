@@ -5,9 +5,9 @@ import java.util.regex.Pattern;
 public class constants {
 
     public static final String SUCCESS =
-            "Operation completed successfully";
+            "Transaction completed successfully";
     public static final String NO_ACCOUNT_FOUND =
-            "Unable to find an account matching this sort code and account number";
+            "Unable to find an account matching this accountType and account number";
     public static final String INVALID_SEARCH_CRITERIA =
             "The provided account number did not match the expected format";
 
@@ -23,6 +23,16 @@ public class constants {
 
     public static final String INVALID_TRANSACTION =
             "Account information is invalid or transaction has been denied for your protection. Please try again.";
+    public static final String INVALID_ACCOUNT_TYPE =
+            "Account Type is invalid. Kindly use either of these CURRENT,\n" +
+                    "    SAVINGS,\n" +
+                    "    CHEQUE,\n" +
+                    "    LOAN; Please try again.";
+    public static final String DUPLICATE_ACCOUNT_TYPE =
+            "You can only have one account of the one type in one bank. Choose another account type from CURRENT, +\n" +
+                    "                    \"    SAVINGS,\\n\" +\n" +
+                    "                    \"    CHEQUE,\\n\" +\n" +
+                    "                    \"    LOAN;  or open account in another Bank";
     public static final String CREATE_ACCOUNT_FAILED =
             "Error happened during creating new account";
 

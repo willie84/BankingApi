@@ -9,6 +9,7 @@ import com.example.BankingAPI.repository.TransactionRepository;
 import com.mifmif.common.regex.Generex;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.example.BankingAPI.constants.constants.ACCOUNT_NUMBER_PATTERN_STRING;
@@ -42,10 +43,16 @@ public class AccountService {
         return account.orElse(null);
     }
 
-    public Account createAccount(String bankName, Customer customer) {
+    public List<Account> getAccount(Customer customer, String bankName) {
+        Optional<List<Account>> account = accountRepository
+                .findAccountByCustomerAndBankName(customer, bankName);
+        return account.orElse(null);
+    }
+
+    public Account createAccount(String bankName, Customer customer, String accountType) {
         Generex accountNumberGenerex = new Generex(ACCOUNT_NUMBER_PATTERN_STRING);
-        LedgerAmount ledgerAmount = new LedgerAmount("ZAR",0.0);
-        Account newAccount = new Account(ACCOUNT_TYPE.CHEQUE.toString(),accountNumberGenerex.random(), ledgerAmount,bankName,customer);
+        LedgerAmount ledgerAmount = new LedgerAmount("ZAR", 0.0);
+        Account newAccount = new Account(ACCOUNT_TYPE.valueOf(accountType).toString(), accountNumberGenerex.random(), ledgerAmount, bankName, customer);
         return accountRepository.insert(newAccount);
     }
 }
