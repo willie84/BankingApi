@@ -10,5 +10,5 @@ import java.util.Optional;
 
 public interface TransactionRepository extends MongoRepository<Transaction, String> {
     List<Transaction> findBySourceAccountIdOrderByInitiationDate(String id);
-    Optional< List<Transaction>> findAllBySourceAccountIdOrTargetAccountId(String accountNumber,String accountNumbers);
+    Optional< List<Transaction>> findAllBySourceAccountId(String accountNumber);
 }

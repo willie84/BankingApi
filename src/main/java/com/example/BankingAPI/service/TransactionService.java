@@ -71,7 +71,7 @@ public class TransactionService {
     }
 
     public Optional<List<Transaction>> transactionsFortheAccount(String accountNumber) {
-        return transactionRepository.findAllBySourceAccountIdOrTargetAccountId(accountNumber,accountNumber);
+        return transactionRepository.findAllBySourceAccountId(accountNumber);
     }
 
     // TODO support OFFERING OVERDRAFTS
