@@ -1,0 +1,8 @@
+// To ensure scalabilty 'of the application:
+
+// For the AuthenticationService - you can find my explantion here: src/main/java/com/example/BankingAPI/service/AuthenticationService.java
+
+// Authentication flow diagram : src/main/java/com/example/BankingAPI/service/Authentication_Service_Flow_Diagram.png
+
+1. The application will be deployed to an 2 EC2 instances on AWS and configure a load balancer to balance the traffic.
+2. The LoadBalancer will ensure that the application scales and provides good user experience.
