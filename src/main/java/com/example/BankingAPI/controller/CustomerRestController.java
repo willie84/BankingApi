@@ -93,14 +93,12 @@ public class CustomerRestController {
            LOGGER.error((String) constants.CUSTOMER_ALREADY_EXISTS_WITH_SAME_ID_NUMBER);
             return new ResponseEntity<>(constants.CUSTOMER_ALREADY_EXISTS_WITH_SAME_ID_NUMBER, HttpStatus.OK);
          }
-
       }
 
       if(!customerCreationDetails.getIdNumber().isBlank() && !InputValidator.isCustomerIDRightlength(customerCreationDetails.getIdNumber())){
          LOGGER.error((String) constants.INVALID_ID_LENGTH);
          return new ResponseEntity<>(constants.INVALID_ID_LENGTH, HttpStatus.BAD_REQUEST);
       }
-
       else {
          LOGGER.error((String) constants.INVALID_SEARCH_CRITERIA);
          return new ResponseEntity<>(constants.INVALID_SEARCH_CRITERIA, HttpStatus.BAD_REQUEST);

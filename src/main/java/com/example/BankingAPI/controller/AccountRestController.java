@@ -52,11 +52,6 @@ public class AccountRestController {
     public ResponseEntity<?> checkAccount(
             @Valid @RequestBody GetAccountDetails getAccountDetails) {
         LOGGER.debug("Triggered AccountRestController creating an account");
-        LOGGER.trace("A TRACE Message");
-        LOGGER.debug("A DEBUG Message");
-        LOGGER.info("An INFO Message");
-        LOGGER.warn("A WARN Message");
-        LOGGER.error("An ERROR Message");
         // Validate input
         if (InputValidator.isSearchCriteriaValid(getAccountDetails)) {
             // Attempt to retrieve the account information
