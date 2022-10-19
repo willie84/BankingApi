@@ -61,12 +61,12 @@ public class AccountRestController {
         if (InputValidator.isSearchCriteriaValid(getAccountDetails)) {
             // Attempt to retrieve the account information
             Account account = accountService.getAccount(getAccountDetails.getAccountNumber());
-
             // Return the account details, or warn that no account was found for given input
             if (account == null) {
                 LOGGER.error(constants.NO_ACCOUNT_FOUND);
                 return new ResponseEntity<>(constants.NO_ACCOUNT_FOUND, HttpStatus.OK);
             } else {
+                LOGGER.info(constants.ACCOUNT_HAS_BEEN_FOUND);
                 return new ResponseEntity<>(account, HttpStatus.OK);
             }
         } else {

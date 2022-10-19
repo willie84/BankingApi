@@ -1,6 +1,7 @@
 package com.example.BankingAPI.controller;
 
 import com.example.BankingAPI.constants.ACTION;
+import com.example.BankingAPI.constants.constants;
 import com.example.BankingAPI.model.Account;
 import com.example.BankingAPI.model.LedgerAmount;
 import com.example.BankingAPI.model.Transaction;
@@ -9,7 +10,6 @@ import com.example.BankingAPI.service.TransactionService;
 import com.example.BankingAPI.utils.DepositDetails;
 import com.example.BankingAPI.utils.QueryTransactionsListInput;
 import com.example.BankingAPI.utils.TransactionDetails;
-import com.example.BankingAPI.utils.WithdrawDetails;
 import com.example.BankingAPI.validators.InputValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,6 +65,7 @@ public class TransactionRestController {
             LOGGER.info("The transactions of this account have been retrieved");
             return new ResponseEntity<>(transactionsList, HttpStatus.OK);
         } else {
+            LOGGER.error(INVALID_TRANSACTION);
             return new ResponseEntity<>(INVALID_TRANSACTION, HttpStatus.BAD_REQUEST);
         }
     }
@@ -80,6 +81,7 @@ public class TransactionRestController {
             LOGGER.info("Transfer was done succesfully");
             return new ResponseEntity<>(isComplete, HttpStatus.OK);
         } else {
+            LOGGER.error(INVALID_TRANSACTION);
             return new ResponseEntity<>(INVALID_TRANSACTION, HttpStatus.BAD_REQUEST);
         }
     }
@@ -88,14 +90,14 @@ public class TransactionRestController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> withdraw(
-            @Valid @RequestBody WithdrawDetails withdrawDetails) {
+            @Valid @RequestBody DepositDetails withdrawDetails) {
         LOGGER.debug("Triggered AccountRestController.withdrawInput");
 
         // Validate input
-        if (InputValidator.isSearchCriteriaValid(withdrawDetails)) {
+        if (InputValidator.isAccountNoValid(withdrawDetails.getTargetAccountNo())) {
             // Attempt to retrieve the account information
             Account account = accountService.getAccount(
-                    withdrawDetails.getAccountNumber());
+                    withdrawDetails.getTargetAccountNo());
 
             // Return the account details, or warn that no account was found for given input
             if (account == null) {
@@ -104,12 +106,15 @@ public class TransactionRestController {
                 if (transactionService.isAmountAvailable(withdrawDetails.getAmount(), account.getCurrentBalance().getAmount())) {
                     transactionService.updateAccountBalance(account, withdrawDetails.getAmount(), ACTION.WITHDRAW);
                     LedgerAmount amount = new LedgerAmount("ZAR", withdrawDetails.getAmount());
-                    createSingleTransaction(account,amount,transactionService.getTransactionRepository(),ACTION.WITHDRAW.toString());
-                    return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+                    Transaction transaction = createSingleTransaction(account,amount,transactionService.getTransactionRepository(),ACTION.WITHDRAW.toString());
+                    LOGGER.info(constants.WITHDRAWAL_WAS_MADE_TO_THIS_ACCOUNT+" "+account);
+                    return new ResponseEntity<>(transaction+" "+SUCCESS, HttpStatus.OK);
                 }
-                return new ResponseEntity<>(INSUFFICIENT_ACCOUNT_BALANCE, HttpStatus.OK);
+                LOGGER.error(INSUFFICIENT_ACCOUNT_BALANCE + "The balance available is: " +account.getCurrentBalance());
+                return new ResponseEntity<>(INSUFFICIENT_ACCOUNT_BALANCE + "The balance available is: " +account.getCurrentBalance(), HttpStatus.OK);
             }
         } else {
+            LOGGER.error(INVALID_SEARCH_CRITERIA);
             return new ResponseEntity<>(INVALID_SEARCH_CRITERIA, HttpStatus.BAD_REQUEST);
         }
     }
@@ -133,10 +138,12 @@ public class TransactionRestController {
             } else {
                 transactionService.updateAccountBalance(account, depositDetails.getAmount(), ACTION.DEPOSIT);
                 LedgerAmount amount = new LedgerAmount("ZAR", depositDetails.getAmount());
-                createSingleTransaction(account,amount,transactionService.getTransactionRepository(),ACTION.DEPOSIT.toString());
-                return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+                Transaction transaction = createSingleTransaction(account,amount,transactionService.getTransactionRepository(),ACTION.DEPOSIT.toString());
+                LOGGER.info(constants.DEPOSIT_WAS_MADE_TO_THIS_ACCOUNT+" "+account);
+                return new ResponseEntity<>(transaction+" "+SUCCESS, HttpStatus.OK);
             }
         } else {
+            LOGGER.warn(constants.INVALID_SEARCH_CRITERIA);
             return new ResponseEntity<>(INVALID_SEARCH_CRITERIA, HttpStatus.BAD_REQUEST);
         }
     }

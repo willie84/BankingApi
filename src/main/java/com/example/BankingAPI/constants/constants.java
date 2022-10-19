@@ -37,4 +37,8 @@ public class constants {
             "Error happened during creating new customer";
     public static final Object INVALID_ID_LENGTH = "The ID Length should be 13 in length";
     public static final Object CUSTOMER_ALREADY_EXISTS_WITH_SAME_ID_NUMBER = "Customer with same ID Number already exists" ;
+    public static final String ACCOUNT_HAS_BEEN_FOUND = "Account has been found";
+    public static final Object NO_CUSTOMER_FOUND ="No Customer with such ID Number was found in the database" ;
+    public static final String DEPOSIT_WAS_MADE_TO_THIS_ACCOUNT = "A deposit was made to this account";
+    public static final String WITHDRAWAL_WAS_MADE_TO_THIS_ACCOUNT ="A withdrawal was made in this account" ;
 }

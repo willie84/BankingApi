@@ -46,7 +46,7 @@ public class CustomerRestController {
 
    @GetMapping(value = "/customers", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
    public ResponseEntity<?> checkCustomerExists(@Valid @RequestBody GetCustomerDetails getCustomerDetails) {
-      LOGGER.debug("Triggered CustomerRestController.CheckCustomerInput");
+      LOGGER.debug("Triggered CustomerRestController.CheckCustomer");
       System.out.println(InputValidator.isCustomerSearchCriteriaValid(getCustomerDetails));
       // Validate input
       if (InputValidator.isCustomerSearchCriteriaValid(getCustomerDetails)) {
@@ -55,18 +55,21 @@ public class CustomerRestController {
 
          // Return the account details, or warn that no account was found for given input
          if (customer.isEmpty()) {
-            return new ResponseEntity<>(constants.NO_ACCOUNT_FOUND, HttpStatus.OK);
+            LOGGER.error((String) constants.NO_CUSTOMER_FOUND);
+            return new ResponseEntity<>(constants.NO_CUSTOMER_FOUND, HttpStatus.OK);
          } else {
+            LOGGER.info(customer.toString() + "Was created");
             return new ResponseEntity<>(customer, HttpStatus.OK);
          }
       } else {
+         LOGGER.error(constants.INVALID_SEARCH_CRITERIA);
          return new ResponseEntity<>(constants.INVALID_SEARCH_CRITERIA, HttpStatus.BAD_REQUEST);
       }
    }
 
    @PostMapping(value = "/customers", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
    public ResponseEntity<?> createCustomer(@Valid @RequestBody CustomerCreationDetails customerCreationDetails) {
-      LOGGER.debug("Triggered CustomerRestController.createCustomerInput");
+      LOGGER.debug("Triggered CustomerRestController.createCustomer");
 
       // Validate input
       if (InputValidator.isCreateCustomerCriteriaValid(customerCreationDetails)) {
@@ -87,16 +90,19 @@ public class CustomerRestController {
          }
       }
          else{
+           LOGGER.error((String) constants.CUSTOMER_ALREADY_EXISTS_WITH_SAME_ID_NUMBER);
             return new ResponseEntity<>(constants.CUSTOMER_ALREADY_EXISTS_WITH_SAME_ID_NUMBER, HttpStatus.OK);
          }
 
       }
 
       if(!customerCreationDetails.getIdNumber().isBlank() && !InputValidator.isCustomerIDRightlength(customerCreationDetails.getIdNumber())){
+         LOGGER.error((String) constants.INVALID_ID_LENGTH);
          return new ResponseEntity<>(constants.INVALID_ID_LENGTH, HttpStatus.BAD_REQUEST);
       }
 
       else {
+         LOGGER.error((String) constants.INVALID_SEARCH_CRITERIA);
          return new ResponseEntity<>(constants.INVALID_SEARCH_CRITERIA, HttpStatus.BAD_REQUEST);
       }
    }

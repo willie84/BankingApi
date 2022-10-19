@@ -25,7 +25,7 @@ public class createTransaction {
     public static Transaction createSingleTransaction(Account sourceAccount, LedgerAmount transcationAmounts, TransactionRepository transactionRepository, String reference) {
         var transaction = new Transaction();
         transaction.setAmount(new LedgerAmount("ZAR", transcationAmounts.getAmount()));
-        transaction.setSourceAccountId(sourceAccount.getAccountId());
+        transaction.setSourceAccountId(sourceAccount.getAccountNumber());
         transaction.setTargetAccountId(null);
         transaction.setTargetOwnerName(sourceAccount.getCustomer());
         transaction.setInitiationDate(LocalDateTime.now());
