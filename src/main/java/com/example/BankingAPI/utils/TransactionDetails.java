@@ -5,9 +5,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 
 public class TransactionDetails {
-    @NotBlank(message = "sourceAccount is mandatory")
     private GetAccountDetails sourceAccount;
-    @NotBlank(message = "targetAccount is mandatory")
     private GetAccountDetails targetAccount;
 
     @Positive(message = "Transfer amount must be positive")

@@ -56,6 +56,7 @@ public class TransactionRestController {
         if (InputValidator.isSearchTransactionValid(transactionDetails)) {
 //            new Thread(() -> transactionService.makeTransfer(transactionInput));
             boolean isComplete = transactionService.makeTransfer(transactionDetails);
+            LOGGER.info("Transfer was done succesfully");
             return new ResponseEntity<>(isComplete, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(INVALID_TRANSACTION, HttpStatus.BAD_REQUEST);
