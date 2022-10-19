@@ -1,7 +1,6 @@
 package com.example.BankingAPI.utils;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 
 public class TransactionDetails {

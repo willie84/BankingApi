@@ -1,12 +1,11 @@
 package com.example.BankingAPI.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
-import javax.validation.Valid;
-
+import com.example.BankingAPI.constants.constants;
+import com.example.BankingAPI.model.Customer;
+import com.example.BankingAPI.service.CustomerService;
+import com.example.BankingAPI.utils.CustomerCreationDetails;
 import com.example.BankingAPI.utils.GetCustomerDetails;
+import com.example.BankingAPI.validators.InputValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +23,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.BankingAPI.constants.constants;
-import com.example.BankingAPI.model.Customer;
-import com.example.BankingAPI.service.CustomerService;
-import com.example.BankingAPI.utils.CustomerCreationDetails;
-import com.example.BankingAPI.validators.InputValidator;
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @Validated

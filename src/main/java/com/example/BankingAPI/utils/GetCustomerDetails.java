@@ -1,8 +1,7 @@
 package com.example.BankingAPI.utils;
 
-import java.util.Objects;
-
 import javax.validation.constraints.NotBlank;
+import java.util.Objects;
 
 public class GetCustomerDetails {
    @NotBlank(message = "Customer idNumber is mandatory")

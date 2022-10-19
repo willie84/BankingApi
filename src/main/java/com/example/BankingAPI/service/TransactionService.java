@@ -8,14 +8,11 @@ import com.example.BankingAPI.model.Transaction;
 import com.example.BankingAPI.repository.AccountRepository;
 import com.example.BankingAPI.repository.TransactionRepository;
 import com.example.BankingAPI.utils.TransactionDetails;
-import com.example.BankingAPI.utils.createTransaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
 
 import static com.example.BankingAPI.utils.createTransaction.createTransferTransaction;
 
@@ -74,7 +71,7 @@ public class TransactionService {
         return transactionRepository.findAllBySourceAccountId(accountNumber);
     }
 
-    // TODO support OFFERING OVERDRAFTS
+    // TODO FUTURE support OFFERING OVERDRAFTS
     public boolean isAmountAvailable(double amount, double accountBalance) {
         return (accountBalance - amount) > 0;
     }

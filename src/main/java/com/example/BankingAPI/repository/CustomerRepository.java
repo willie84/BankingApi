@@ -1,6 +1,5 @@
 package com.example.BankingAPI.repository;
 
-import com.example.BankingAPI.model.Account;
 import com.example.BankingAPI.model.Customer;
 import org.springframework.data.mongodb.repository.MongoRepository;
 

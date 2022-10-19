@@ -1,6 +1,5 @@
 package com.example.BankingAPI.service;
 
-import com.example.BankingAPI.model.Account;
 import com.example.BankingAPI.model.Customer;
 import com.example.BankingAPI.repository.CustomerRepository;
 import org.springframework.stereotype.Service;

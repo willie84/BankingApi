@@ -1,12 +1,11 @@
 package com.example.BankingAPI.model;
 
-import java.util.List;
-import java.util.Objects;
-
+import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import lombok.Data;
+import java.util.List;
+import java.util.Objects;
 
 @Data
 @Document
